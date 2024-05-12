@@ -1,48 +1,57 @@
 let korisnikPobjede = 0;
-let računaloPobjede = 0; 
-let nerjeseno = 0;
+let računaloPobjede = 0;
+let neriješeno = 0;
 
-//funkcija za slučajni odabir od strane računala
-function getComputerChoice(){
- 
+//funkcija vraća odabir računala
+function getComputerChoice() {
     const choices = ["kamen", "škare", "papir"];
     const randomBroj = Math.floor(Math.random() * 3);
     return choices[randomBroj];
 }
 
-let unosRačunala = getComputerChoice();
-document.write(`Odabir računala je: ${unosRačunala.charAt(0).toUpperCase() + unosRačunala.slice(1)}` + "<br>");
-
-//funkcija za odabir od strane osobe
+//funkcija koja prima korisnikov odabir
 function getHumanChoice() {
-
     let korisnikUnos = prompt("Upišite želite li: Kamen, Škare ili Papir");
     korisnikUnos = korisnikUnos.toLowerCase();
-    
+
     if (korisnikUnos === "kamen" || korisnikUnos === "škare" || korisnikUnos === "papir") {
-        document.write("Korisnikov unos je: " + korisnikUnos.charAt(0).toUpperCase() + korisnikUnos.slice(1) + "<br>");
         return korisnikUnos;
     } else {
         return getHumanChoice();
     }
 }
 
-let korisnikovUnos = getHumanChoice();
-
-//funkcija koja izvršava igru
+//funkcija koja izvrsava igru
 function playRound(unosRačunala, korisnikovUnos) {
-  
+    let rezultat;
     if (unosRačunala === korisnikovUnos) {
-        window.alert("Nerješeno je.");
-    } 
-    else if ((unosRačunala === "škare" && korisnikovUnos === "papir") ||
+        neriješeno++;
+        rezultat = "Neriješeno";
+    } else if ((unosRačunala === "škare" && korisnikovUnos === "papir") ||
                (unosRačunala === "papir" && korisnikovUnos === "kamen") ||
                (unosRačunala === "kamen" && korisnikovUnos === "škare")) {
-        window.alert("Računalo pobjeđuje.");
-    } 
-    else {
-        window.alert("Korisnik pobjeđuje.");
+        računaloPobjede++;
+        rezultat = "Računalo pobjeđuje";
+    } else {
+        korisnikPobjede++;
+        rezultat = "Korisnik pobjeđuje";
     }
+    console.log(`Računalo: ${unosRačunala} vs. Korisnik: ${korisnikovUnos} - ${rezultat}`);
 }
 
-playRound(unosRačunala, korisnikovUnos);
+//petlja koja vrti sve 5x
+for (let i = 0; i < 5; i++) {
+    let unosRačunala = getComputerChoice();
+    let korisnikovUnos = getHumanChoice();
+    playRound(unosRačunala, korisnikovUnos);
+}
+
+console.log(`Korisnik ima ${korisnikPobjede} pobjeda, Računalo ima ${računaloPobjede} pobjeda, Neriješeno je ${neriješeno} puta`);
+
+if (korisnikPobjede > računaloPobjede) {
+    console.log("Korisnik je ukupni pobjednik!");
+} else if (računaloPobjede > korisnikPobjede) {
+    console.log("Računalo je ukupni pobjednik!");
+} else {
+    console.log("Nema ukupnog pobjednika, neriješeno je.");
+}
